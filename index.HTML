@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>英语形容词排序 OSSCACMPN 课堂版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf5 100%);
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title {
+            text-align: center;
+            color: #2d405f;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .rule {
+            text-align: center;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: bold;
+        }
+
+        .difficulty {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .difficulty button {
+            padding: 10px 18px;
+            margin: 0 6px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-easy { background: #34a853; color: white; }
+        .btn-medium { background: #fbbc05; color: white; }
+        .btn-hard { background: #ea4335; color: white; }
+        .active-diff {
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 17px;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .stage {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d405f;
+            margin-bottom: 15px;
+        }
+
+        .word-area {
+            background: #fff;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            min-height: 110px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .word-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .word {
+            padding: 8px 14px;
+            background: #4285f4;
+            color: white;
+            border-radius: 22px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: bold;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .word:hover {
+            transform: scale(1.05);
+            background: #3367d6;
+        }
+
+        .groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .group {
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            min-height: 150px;
+            transition: 0.2s;
+        }
+
+        .group h4 {
+            color: #2d405f;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border-left: 5px solid #4285f4;
+            padding-left: 8px;
+        }
+
+        .drop-area {
+            min-height: 90px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .correct { background: #34a853 !important; }
+        .wrong { background: #ea4335 !important; }
+        .selected { background: #fbbc05 !important; color: #222; }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 11px 24px;
+            margin: 0 8px;
+            border: none;
+            border-radius: 8px;
+            background: #2d405f;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background: #4285f4;
+            transform: translateY(-2px);
+        }
+
+        #msg {
+            text-align: center;
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 18px;
+            height: 28px;
+            color: #2d405f;
+        }
+
+        .danger {
+            color: #ea4335 !important;
+            font-weight: bold;
+        }
+
+        .life {
+            color: #ea4335;
+            font-size: 20px;
+        }
+
+        .combo {
+            color: #fbbc05;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .control {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .control button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="title">英语形容词排序 OSSCACMPN 课堂练习版</h2>
+    <p class="rule">顺序口诀：O观点 → S大小 → S形状 → C状况 → A年龄 → C颜色 → O产地 → M材质 → P用途 → N名词</p>
+
+    <div class="difficulty">
+        <button class="btn-easy active-diff" id="easy" onclick="setDifficulty('easy')">简单 3词</button>
+        <button class="btn-medium" id="medium" onclick="setDifficulty('medium')">中等 5词</button>
+        <button class="btn-hard" id="hard" onclick="setDifficulty('hard')">困难 7词</button>
+    </div>
+
+    <div class="control">
+        <button onclick="togglePause()">暂停 / 继续</button>
+        <button onclick="toggleMute()">🔇 静音 / 声音</button>
+    </div>
+
+    <div class="stage" id="stageText">当前：第 1 关</div>
+    <div class="info-bar">
+        <div>得分：<span id="score">0</span></div>
+        <div>倒计时：<span id="countdown" class="danger">60</span> 秒</div>
+        <div>错题：<span id="mistake">0</span></div>
+        <div>生命：<span id="life" class="life">❤️❤️❤️</span></div>
+        <div>连击：<span id="combo" class="combo">0</span></div>
+    </div>
+
+    <div class="word-area">
+        <div class="word-box" id="wordBox"></div>
+    </div>
+
+    <div class="groups">
+        <div class="group">
+            <h4>O - Opinion 观点</h4>
+            <div class="drop-area" data-type="opinion"></div>
+        </div>
+        <div class="group">
+            <h4>S - Size 大小</h4>
+            <div class="drop-area" data-type="size"></div>
+        </div>
+        <div class="group">
+            <h4>S - Shape 形状</h4>
+            <div class="drop-area" data-type="shape"></div>
+        </div>
+        <div class="group">
+            <h4>C - Condition 状况</h4>
+            <div class="drop-area" data-type="condition"></div>
+        </div>
+        <div class="group">
+            <h4>A - Age 年龄/新旧</h4>
+            <div class="drop-area" data-type="age"></div>
+        </div>
+        <div class="group">
+            <h4>C - Color 颜色</h4>
+            <div class="drop-area" data-type="color"></div>
+        </div>
+        <div class="group">
+            <h4>O - Origin 产地</h4>
+            <div class="drop-area" data-type="origin"></div>
+        </div>
+        <div class="group">
+            <h4>M - Material 材质</h4>
+            <div class="drop-area" data-type="material"></div>
+        </div>
+        <div class="group">
+            <h4>P - Purpose 用途</h4>
+            <div class="drop-area" data-type="purpose"></div>
+        </div>
+        <div class="group">
+            <h4>N - Noun 名词</h4>
+            <div class="drop-area" data-type="noun"></div>
+        </div>
+    </div>
+
+    <div id="msg"></div>
+
+    <div class="btn-group">
+        <button onclick="startGame()">开始游戏</button>
+        <button onclick="showHint()">💡 线索提示</button>
+        <button onclick="resetGame()">🔄 重置游戏</button>
+    </div>
+
+    <script>
+        const wordData = {
+            opinion: ["nice","cool","beautiful","ugly","wonderful","terrible","lovely","horrible","excellent","bad","good","fantastic"],
+            size: ["big","small","huge","tiny","long","short","large","little","giant","massive","thin","thick"],
+            shape: ["square","round","triangular","flat","oval","circular","straight","curved","narrow","wide"],
+            condition: ["clean","dirty","broken","new","used","repaired","damaged","perfect","messy","tidy"],
+            age: ["new","old","ancient","modern","young","aged","brand-new","classic","latest","antique"],
+            color: ["red","blue","green","black","white","golden","yellow","pink","purple","brown","gray","orange"],
+            origin: ["Italian","Chinese","French","American","local","Japanese","Russian","British","Spanish","German"],
+            material: ["metal","wood","plastic","cotton","silk","leather","glass","paper","rubber","wool","stone","clay"],
+            purpose: ["sports","cooking","racing","sleeping","office","school","shopping","travel","playing","working"],
+            noun: ["car","dress","table","phone","bag","book","chair","bed","pen","box","cup","watch"]
+        };
+
+        const clueMap = {
+            opinion: "这是评价好坏、美丑的词",
+            size: "这是描述大小、长短、高矮的词",
+            shape: "这是描述形状、方圆的词",
+            condition: "这是描述状态、好坏、破损的词",
+            age: "这是描述新旧、年代的词",
+            color: "这是描述颜色的词",
+            origin: "这是描述国家、产地的词",
+            material: "这是描述材料、质地的词",
+            purpose: "这是描述用途、功能的词",
+            noun: "这是物品本身的名字"
+        };
+
+        // 难度单词数量固定
+        const baseConfig = {
+            easy:    { baseTime: 60, baseWords: 3 },
+            medium:  { baseTime: 60, baseWords: 5 },
+            hard:    { baseTime: 60, baseWords: 7 }
+        };
+
+        let currentDiff = "easy";
+        let score = 0, mistake = 0, countdown = 60;
+        let countTimer = null;
+        let selectedWord = null, level = 1, maxLevel = 10;
+        let correctMap = {};
+        let life = 3, combo = 0;
+        let hintUsed = false;
+        let isPaused = false;
+        let isMuted = false;
+        let gameStarted = false;
+
+        function playSound(type) {
+            if(isMuted) return;
+            let audio;
+            switch(type) {
+                case "correct": audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmImBze5u+wVRwASe7UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="); audio.volume=0.4; break;
+                case "wrong": audio = new Audio("data:audio/wav;base64,UklGRngGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBd5FYa15fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmImBze5u+wVRwASe7kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="); audio.volume=0.4; break;
+                case "win": audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmImBze5u+wVRwASe7UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="); audio.volume=0.5; break;
+                case "lose": audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmImBze5u+wVRwASe7UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="); audio.volume=0.5; break;
+                case "start": audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmImBze5u+wVRwASe7UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="); audio.volume=0.5; break;
+            }
+            if(audio) audio.play();
+        }
+
+        function setDifficulty(d) {
+            currentDiff = d;
+            document.querySelectorAll('.difficulty button').forEach(b => b.classList.remove('active-diff'));
+            document.getElementById(d).classList.add('active-diff');
+        }
+
+        function startGame() {
+            clearInterval(countTimer);
+            score = 0; mistake = 0; combo = 0;
+            life = 3; level = 1;
+            hintUsed = false;
+            isPaused = false;
+            gameStarted = true;
+            updateUI();
+            nextLevel();
+            playSound("start");
+        }
+
+        function nextLevel() {
+            if(level > maxLevel) {
+                showMsg(`🎉 恭喜你！全部通关！总分：${score}`, "#34a853");
+                clearInterval(countTimer);
+                return;
+            }
+            clearInterval(countTimer);
+            selectedWord = null;
+            hintUsed = false;
+            correctMap = {};
+            resetBoard();
+            generateLevelWords();
+            startTimer();
+            updateUI();
+            showMsg(`第 ${level} 关开始！`, "#4285f4");
+        }
+
+        function generateLevelWords() {
+            const box = document.getElementById("wordBox");
+            box.innerHTML = "";
+            const cfg = baseConfig[currentDiff];
+            let wordCount = cfg.baseWords;
+            countdown = cfg.baseTime;
+
+            const types = Object.keys(wordData);
+            let wordList = [];
+
+            while(wordList.length < wordCount) {
+                const t = types[Math.floor(Math.random() * types.length)];
+                const w = wordData[t][Math.floor(Math.random() * wordData[t].length)];
+                if(!wordList.includes(w)) {
+                    wordList.push(w);
+                    correctMap[w] = t;
+                }
+            }
+
+            wordList.sort(() => Math.random() - 0.5).forEach(w => {
+                const div = document.createElement("div");
+                div.className = "word";
+                div.innerText = w;
+                div.onclick = () => selectWord(w, div);
+                box.appendChild(div);
+            });
+        }
+
+        function selectWord(word, elem) {
+            if(!gameStarted || isPaused || life <=0 || countdown <=0) return;
+            document.querySelectorAll(".word").forEach(d => d.classList.remove("selected"));
+            elem.classList.add("selected");
+            selectedWord = { word, elem };
+        }
+
+        document.querySelectorAll(".drop-area").forEach(area => {
+            area.onclick = () => {
+                if(!selectedWord || isPaused || life <=0 || countdown <=0) return;
+                const targetType = area.dataset.type;
+                const right = correctMap[selectedWord.word] === targetType;
+
+                if(right) {
+                    playSound("correct");
+                    combo++;
+                    score += 10 * Math.min(combo, 5);
+                    selectedWord.elem.classList.add("correct");
+                    selectedWord.elem.style.pointerEvents = "none";
+                    area.appendChild(selectedWord.elem);
+                    selectedWord = null;
+                    checkLevelComplete();
+                } else {
+                    playSound("wrong");
+                    combo = 0;
+                    mistake++;
+                    life = Math.max(0, life - 1);
+                    selectedWord.elem.classList.add("wrong");
+                    setTimeout(() => {
+                        selectedWord.elem.classList.remove("wrong", "selected");
+                    }, 400);
+                }
+                updateUI();
+                checkGameOver();
+            };
+        });
+
+        function checkLevelComplete() {
+            const total = document.querySelectorAll(".word").length;
+            const correct = document.querySelectorAll(".word.correct").length;
+            if(total === correct) {
+                clearInterval(countTimer);
+                playSound("win");
+                showMsg(`✅ 第 ${level} 关通关！`, "#34a853");
+                level++;
+                setTimeout(() => nextLevel(), 1300);
+            }
+        }
+
+        function checkGameOver() {
+            if(life <= 0) {
+                clearInterval(countTimer);
+                playSound("lose");
+                showMsg(`💀 游戏结束！总分：${score}`, "#ea4335");
+            }
+        }
+
+        function showHint() {
+            if(!gameStarted || hintUsed || isPaused || life <= 0 || countdown <= 0) {
+                return;
+            }
+            
+            hintUsed = true;
+            let targetWord = null;
+            let targetType = null;
+
+            for (let word in correctMap) {
+                const elements = document.querySelectorAll('.word');
+                let isUnanswered = false;
+                
+                elements.forEach(el => {
+                    if (el.innerText === word && !el.classList.contains('correct')) {
+                        isUnanswered = true;
+                    }
+                });
+
+                if (isUnanswered) {
+                    targetWord = word;
+                    targetType = correctMap[word];
+                    break;
+                }
+            }
+
+            if (targetWord && targetType) {
+                const clue = clueMap[targetType];
+                showMsg(`💡 ${targetWord} → ${clue}`, "#fbbc05");
+            } else {
+                showMsg("✅ 所有单词都已归类！", "#34a853");
+            }
+        }
+
+        function startTimer() {
+            countTimer = setInterval(() => {
+                if(isPaused) return;
+                countdown--;
+                if(countdown <= 0) {
+                    clearInterval(countTimer);
+                    showMsg("⏰ 时间到！", "#ea4335");
+                    checkGameOver();
+                }
+                updateUI();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            document.querySelectorAll(".drop-area").forEach(a => a.innerHTML = "");
+            document.getElementById("wordBox").innerHTML = "";
+        }
+
+        function updateUI() {
+            document.getElementById("score").innerText = score;
+            document.getElementById("countdown").innerText = countdown;
+            document.getElementById("mistake").innerText = mistake;
+            document.getElementById("combo").innerText = combo;
+            document.getElementById("stageText").innerText = `当前：第 ${level} 关`;
+            document.getElementById("life").innerText = "❤️".repeat(life);
+        }
+
+        function showMsg(text, color) {
+            const m = document.getElementById("msg");
+            m.innerText = text;
+            m.style.color = color || "#2d405f";
+        }
+
+        function resetGame() {
+            clearInterval(countTimer);
+            startGame();
+        }
+
+        function togglePause() {
+            if(!gameStarted) return;
+            isPaused = !isPaused;
+            showMsg(isPaused ? "⏸ 游戏已暂停" : "▶ 游戏继续", isPaused ? "#666" : "#4285f4");
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            showMsg(isMuted ? "🔇 已静音" : "🔊 声音开启", "#666");
+        }
+    </script>
+</body>
+</html>
